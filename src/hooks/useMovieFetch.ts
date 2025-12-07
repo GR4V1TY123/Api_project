@@ -36,7 +36,7 @@ export default function useMovieFetch() {
         if (res.Response === "True") {
             return res;
         }
-        throw new Error("Failed to fetch movies")
+        throw new Error("Movies not found")
     }
 
     // Cache logic

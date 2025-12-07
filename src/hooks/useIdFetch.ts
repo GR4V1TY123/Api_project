@@ -36,7 +36,7 @@ export default function useIdFetch() {
         if (res.Response === "True") {
             return res;
         }
-        throw new Error("Failes to fetch movie details");
+        throw new Error(`No movie found for the id ${id}`);
     }
 
     const query = useQuery(
