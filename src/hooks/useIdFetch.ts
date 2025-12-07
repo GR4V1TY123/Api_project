@@ -21,7 +21,7 @@ export default function useIdFetch() {
 
     const fetchMovie = async () => {
         const currTime = Date.now();
-        const data = await fetch(`http://www.omdbapi.com/?i=${id}&apikey=${apiKey}&plot=full`)
+        const data = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=${apiKey}&plot=full`)
         const res = await data.json();
         const headersObj = Object.fromEntries(data.headers.entries());
         const afterTime = Date.now();

@@ -22,7 +22,7 @@ export default function useMovieFetch() {
         if (!title?.trim()) return []
 
         const currTime = Date.now();
-        const data = await fetch(`http://www.omdbapi.com/?s=${title}&apikey=${apiKey}&page=${1}`)
+        const data = await fetch(`https://www.omdbapi.com/?s=${title}&apikey=${apiKey}&page=${1}`)
         const res = await data.json();
         const headersObj = Object.fromEntries(data.headers.entries());
         const afterTime = Date.now();
