@@ -19,13 +19,17 @@ export default function MovieCard({ movie }: any) {
     const image =
         Poster !== "N/A"
             ? Poster
-            : "https://via.placeholder.com/300x450?text=No+Image";
+            : "placeholder.png";
 
     return (
         <Card className="rounded-xl shadow-sm hover:shadow-md hover:bg-slate-200 transition overflow-hidden p-3">
             <div className="flex w-full justify-center">
                 <img
                     src={image}
+                    onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src = "/placeholder.png";
+                    }}
                     alt={Title}
                     className="w-50 h-75 object-cover rounded-xl"
                 />

@@ -1,42 +1,56 @@
-import { useState } from 'react'
+import { QueryClient, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom';
 
 export default function useMovieFetch() {
-
     const apiKey = import.meta.env.VITE_OMDB_KEY;
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("")
-    const [movies, setMovies] = useState([])
+    // Get title from url
+    const [searchParams] = useSearchParams();
+    const title = searchParams.get("title");
 
-    const fetchMovies = async ({ title, page }: any) => {
-        setError("")
-        setLoading(true)
-        setMovies([])
+    // States for api log
+    const [apiResponse, setApiResponse] = useState({
+        resJson: {},
+        resTime: 0.00,
+        statusCode: 0,
+        resType: "",
+        resHeaders: {},
+    });
 
-        {/* try 3 times, till we get movies */ }
-        let count = 3;
-        let success = false;
-        while (count > 0) {
-            try {
-                const data = await fetch(`http://www.omdbapi.com/?s=${title}&apikey=${apiKey}&page=${page}`)
-                const res = await data.json();
-                if (res.Response === "True") {
-                    success = true;
-                    setMovies(res.Search);
-                    break;
-                }
-            } catch (e: any) {
-                setError(e.message);
-                break;
-            }
-            count--;
+    const fetchMovies = async () => {
+        if (!title?.trim()) return []
+
+        const currTime = Date.now();
+        const data = await fetch(`http://www.omdbapi.com/?s=${title}&apikey=${apiKey}&page=${1}`)
+        const res = await data.json();
+        const headersObj = Object.fromEntries(data.headers.entries());
+        const afterTime = Date.now();
+        setApiResponse({
+            resJson: res,
+            statusCode: data.status,
+            resType: data.type,
+            resHeaders: headersObj,
+            resTime: afterTime - currTime
+        });
+        if (res.Response === "True") {
+            return res;
         }
-        if (!success && error === "") {
-            setError("Unable to retrieve movies");
-        }
-        setLoading(false)
+        throw new Error("Failed to fetch movies")
     }
 
-    return { loading, error, movies, fetchMovies };
+    // Cache logic
+    // title is used as key, when title changes we call the api again
+    const query = useQuery(
+        {
+            queryKey: [title],
+            queryFn: fetchMovies,
+            retry: 2,
+            enabled: !!title,
+            staleTime: 1000 * 60 * 5
+        }
+    )
+
+    return { title, fullJson: query.data, loading: query.isLoading, error: query.error, movies: query.data?.Search || [], fetchMovies, apiResponse };
 
 }
