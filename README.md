@@ -59,20 +59,8 @@ npm run dev
 #### Search Movies  
 GET http://www.omdbapi.com/?s=<TITLE>&page=1&apikey=<API_KEY>
 
-### Response Example  
-{
- "Search": [
-   {
-     "Title": "The Avengers",
-     "Year": "2012",
-     "imdbID": "tt0848228",
-     "Type": "movie",
-     "Poster": "https://m.media-amazon.com/images/M/MV5BNGE0..._SX300.jpg"
-   }
- ],
- "totalResults": "172",
- "Response": "True"
-}
+#### Get Movie by Id  
+GET http://www.omdbapi.com/?i=<id>&page=1&apikey=<API_KEY>
 
 ------------------------------------------------------------
 
@@ -156,3 +144,10 @@ src/
 │   └── Home.tsx  
 ├── App.tsx  
 └── main.tsx
+
+### ScreenShots
+<img width="1906" height="877" alt="image" src="https://github.com/user-attachments/assets/e38de8db-5ee0-4c09-b64b-070e931a21ee" />
+<img width="1900" height="872" alt="image" src="https://github.com/user-attachments/assets/7bfd1e53-1be7-4874-9849-d4c70f8d067c" />
+<img width="1900" height="872" alt="image" src="https://github.com/user-attachments/assets/07bc7c81-136d-4c64-bac5-71475ee244bf" />
+
+
