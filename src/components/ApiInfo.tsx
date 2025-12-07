@@ -1,6 +1,4 @@
-import useMovieFetch from "@/hooks/useMovieFetch";
 import { JsonEditor, githubDarkTheme } from "json-edit-react";
-import { useSearchParams } from "react-router-dom";
 
 export default function ApiInfo({apiResponse, fullJson, title}: any) {
 

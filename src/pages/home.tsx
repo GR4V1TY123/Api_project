@@ -6,7 +6,7 @@ import { Spinner } from "@/components/ui/spinner"
 import useMovieFetch from "@/hooks/useMovieFetch";
 import List from "@/components/List";
 import ApiInfo from "@/components/ApiInfo";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
 

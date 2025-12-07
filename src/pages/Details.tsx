@@ -67,7 +67,7 @@ export default function Details() {
 
             {/* Ratings */}
             <div className="mt-4 flex flex-wrap gap-3">
-              {movie.Ratings?.map((rate, index) => (
+              {movie.Ratings?.map((rate:any, index:any) => (
                 <div
                   key={index}
                   className="px-3 py-1 bg-gray-200 rounded-lg text-sm font-semibold shadow"

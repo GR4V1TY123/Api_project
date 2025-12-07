@@ -1,5 +1,5 @@
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 
 export default function useMovieFetch() {
