@@ -1,73 +1,158 @@
-# React + TypeScript + Vite
+# Movie API — React + OMDB + TanStack Query
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and fast movie/series search app built to for API integration, client-side caching, error handling, and URL-based search using the OMDB API.
 
-Currently, two official plugins are available:
+This project demonstrates how to:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+• Structure API fetch logic using custom hooks  
+• Log API response metadata (status, time, headers)  
+• Manage React Query cache  
+• Implement dynamic filtering (Movies / Series / All)  
+• Sync search with the URL (?title=)
 
-## React Compiler
+🔗 Live Demo: https://api-project-mandar.netlify.app/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+🔗 GitHub Repo: https://github.com/GR4V1TY123/Api_project
 
-## Expanding the ESLint configuration
+------------------------------------------------------------
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+#### Frontend:
+• React + Vite  
+• TypeScript  
+• TanStack React Query  
+• React Router DOM  
+• TailwindCSS  
+• ShadCN UI + Radix UI Components  
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+#### API:
+• OMDB API  
+  - Search by title → http://www.omdbapi.com/?s=&apikey=  
+  - Fetch by ID → http://www.omdbapi.com/?i=&apikey=  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+#### Deployment:
+• Netlify  
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+------------------------------------------------------------
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Setup & Run Instructions
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1️⃣ Clone Repo  
+git clone https://github.com/GR4V1TY123/Api_project.git
+
+2️⃣ Install Dependencies  
+npm install
+
+3️⃣ Create Environment File  
+Create a file named `.env` in the root:
+
+VITE_OMDB_KEY=your_api_key_here
+
+4️⃣ Run Locally  
+npm run dev
+
+------------------------------------------------------------
+
+### API Endpoints Used
+
+#### Search Movies  
+GET http://www.omdbapi.com/?s=<TITLE>&page=1&apikey=<API_KEY>
+
+### Response Example  
+{
+ "Search": [
+   {
+     "Title": "The Avengers",
+     "Year": "2012",
+     "imdbID": "tt0848228",
+     "Type": "movie",
+     "Poster": "https://m.media-amazon.com/images/M/MV5BNGE0..._SX300.jpg"
+   }
+ ],
+ "totalResults": "172",
+ "Response": "True"
+}
+
+------------------------------------------------------------
+
+### Filters Implemented
+
+1. Category Filter  
+Values:  
+• all  
+• movie  
+• series  
+
+Filtering logic:  
+const filterMovies = movies.filter(m =>
+  category === "all" ? true : m.Type.toLowerCase() === category
+);
+
+2. URL-Based Title Search  
+User’s input updates URL as: /?title=batman  
+React Query fetches automatically because queryKey changes.
+
+------------------------------------------------------------
+
+### Features & Flow
+
+URL → Fetch → Cache → Render
+
+• User types a movie title  
+• App updates URL: /?title=value  
+• useMovieFetch():  
+  - Reads title from URL  
+  - Checks React Query cache  
+  - Fetches if expired or not in cache  
+  - Logs metadata  
+• Movies displayed  
+• Category filter updates results instantly  
+
+------------------------------------------------------------
+
+### Error Handling
+
+The app handles:  
+• Empty search  
+• Invalid movie name (Response: "False")  
+• Network errors  
+• OMDB rate limit  
+• Invalid API key  
+• Loading + No Results UI  
+
+Metadata logged:  
+• Status code  
+• Status text  
+• Response headers  
+• Duration (ms)  
+• Full JSON  
+
+------------------------------------------------------------
+
+### Assumptions & Notes
+
+• OMDB returns only 10 results per page → app uses only page 1  
+• Category filtering is entirely client-side  
+• Search triggers only on form submit  
+• React Query cache uses staleTime = 5 minutes  
+• If thousands of titles are searched, React Query keeps cached data
+
+------------------------------------------------------------
+
+### Project Structure
+
+src/  
+├── components/  
+│   ├── MovieCard.tsx  
+│   ├── Category.tsx  
+│   ├── List.tsx  
+│   └── ApiInfo.tsx  
+├── hooks/  
+│   ├── useMovieFetch.ts  
+│   └── useIdFetch.ts  
+├── pages/  
+│   ├── Details.tsx  
+│   └── Home.tsx  
+├── App.tsx  
+└── main.tsx
